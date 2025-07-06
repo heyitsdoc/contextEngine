@@ -9,9 +9,7 @@ if os.path.exists(SOCKET_PATH):
     os.remove(SOCKET_PATH)
 
 ctx = ContextEngine()
-ctx.add_context("Kill process on port 3000")
-ctx.add_context("Show current git branch")
-ctx.add_context("List all running Docker containers")
+
 
 with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
     server.bind(SOCKET_PATH)
@@ -20,6 +18,7 @@ with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
 
     while True:
         conn, _ = server.accept()
+        
         print(f"⚡ Client connected.")
         with conn:
             try:
@@ -30,6 +29,7 @@ with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as server:
                     conn.sendall("yolo".encode())
                 else:
                     print(f"🔍 Query: {data}")
+                    ctx.add_context(data)
                     results = ctx.retrieve(data)
                     for text, score in results:
                         print(f"→ \"{text}\" (distance: {score:.4f})")
