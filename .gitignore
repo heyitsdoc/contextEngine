@@ -1,0 +1,5 @@
+data/
+data/context.index
+data/context_texts.json
+
+__pycache__/

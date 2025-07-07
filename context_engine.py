@@ -57,8 +57,13 @@ class ContextEngine:
         print(f"✅ Stored: {text}")
         self.save()
 
-    def retrieve(self, query, top_k=1):
+    def retrieve(self, query, top_k=3):
+        if self.index.ntotal == 0:
+            print("sorry list is empty")
+            return []
+        print(query,top_k)
         query_vector = self.embed_text(query)
         D, I = self.index.search(np.array([query_vector]), top_k)
+        print(D, I)
         results = [(self.texts[i], D[0][idx]) for idx, i in enumerate(I[0])]
         return results
